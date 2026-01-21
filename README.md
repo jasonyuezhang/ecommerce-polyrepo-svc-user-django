@@ -2,6 +2,65 @@
 
 A minimal Django-based user microservice providing user registration, authentication, JWT tokens, and profile management with both REST and gRPC interfaces.
 
+## 🎯 About This Repository
+
+This repository is part of the **ecommerce-polyrepo** project - a polyrepo setup designed for testing the [Propel](https://propel.us) code review feature across multiple microservices.
+
+### Role in Microservices Architecture
+
+The User Service handles **authentication and user management**:
+
+```
+┌──────────────┐
+│ API Gateway  │
+│   (Go/Gin)   │
+└──────┬───────┘
+       │ gRPC
+       ▼
+┌──────────────────┐
+│  User Service    │
+│    (Django)      │
+│   [THIS REPO]    │
+│                  │
+│ • Authentication │
+│ • JWT Tokens     │
+│ • User Profiles  │
+│ • REST + gRPC    │
+└──────────────────┘
+```
+
+### Quick Start (Standalone Testing)
+
+To test this service independently:
+
+```bash
+# 1. Set up Python environment
+python -m venv venv
+source venv/bin/activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Set up database
+python manage.py migrate
+
+# 4. Run REST server
+python manage.py runserver 0.0.0.0:8000
+
+# 5. (Optional) Run gRPC server in separate terminal
+python -m users.grpc_server
+
+# 6. Test endpoints
+curl http://localhost:8000/api/health/
+curl -X POST http://localhost:8000/api/auth/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test123"}'
+```
+
+**Note:** This service can run independently with SQLite for testing. For production, it integrates with PostgreSQL and other services via gRPC. See the [parent polyrepo](https://github.com/jasonyuezhang/ecommerce-polyrepo) for full stack setup.
+
+---
+
 ## Features
 
 - User registration and authentication
