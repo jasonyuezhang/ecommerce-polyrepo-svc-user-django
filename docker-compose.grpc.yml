@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Django REST API server
+  api:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/user_service
+      - DJANGO_SETTINGS_MODULE=user_service.settings
+      - DEBUG=true
+      - SECRET_KEY=dev-secret-key-change-in-production
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - ./users/grpc_generated:/app/users/grpc_generated
+
+  # gRPC server
+  grpc:
+    build: .
+    command: python manage.py rungrpc --port 50051 --workers 10
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/user_service
+      - DJANGO_SETTINGS_MODULE=user_service.settings
+      - DEBUG=true
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - GRPC_PORT=50051
+      - GRPC_MAX_WORKERS=10
+    ports:
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - ./users/grpc_generated:/app/users/grpc_generated
+
+volumes:
+  postgres_data:

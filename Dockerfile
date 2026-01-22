@@ -37,5 +37,5 @@ EXPOSE 8000 50051
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health/')" || exit 1
 
-# Run migrations and start server
-CMD ["sh", "-c", "python manage.py migrate && gunicorn user_service.wsgi:application --bind 0.0.0.0:8000 --workers 4 --threads 2"]
+# Run migrations and start both REST and gRPC servers
+CMD ["sh", "-c", "./scripts/start_dual_server.sh"]
