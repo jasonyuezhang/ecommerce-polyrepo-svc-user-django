@@ -30,9 +30,10 @@ echo "Stubs generated successfully!"
 echo "Fixing import paths..."
 cd "$OUTPUT_DIR"
 
-# Fix imports in user_pb2.py
+# Fix imports in user_pb2.py and user_pb2_grpc.py
 if [ -f "proto/user/v1/user_pb2.py" ]; then
     sed -i.bak 's/from proto.common.v1 import common_pb2/from users.grpc_generated.proto.common.v1 import common_pb2/g' proto/user/v1/user_pb2.py
+    sed -i.bak 's/from proto.common.v1 import common_pb2/from users.grpc_generated.proto.common.v1 import common_pb2/g' proto/user/v1/user_pb2_grpc.py
     sed -i.bak 's/from proto.user.v1 import user_pb2/from users.grpc_generated.proto.user.v1 import user_pb2/g' proto/user/v1/user_pb2_grpc.py
     rm -f proto/user/v1/*.bak
 fi
