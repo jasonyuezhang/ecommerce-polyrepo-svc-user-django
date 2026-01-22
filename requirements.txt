@@ -6,7 +6,7 @@ djangorestframework-simplejwt>=5.3,<6.0
 # gRPC
 grpcio>=1.59,<2.0
 grpcio-tools>=1.59,<2.0
-protobuf>=4.24,<5.0
+protobuf>=5.28,<6.0
 
 # Database
 psycopg2-binary>=2.9,<3.0
