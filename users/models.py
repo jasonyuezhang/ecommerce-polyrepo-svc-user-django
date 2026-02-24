@@ -1,7 +1,6 @@
 """
 User models for the user service.
 """
-import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
@@ -36,7 +35,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom User model using email as the unique identifier."""
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.BigAutoField(primary_key=True)
     email = models.EmailField(unique=True, max_length=255)
     username = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
@@ -77,7 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def to_dict(self):
         """Convert user to dictionary for gRPC responses."""
         return {
-            'id': str(self.id),
+            'id': self.id,
             'email': self.email,
             'username': self.username,
             'first_name': self.first_name,
