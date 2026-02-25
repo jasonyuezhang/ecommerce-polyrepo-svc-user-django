@@ -13,7 +13,8 @@ class UserManager(BaseUserManager):
         """Create and save a regular user with the given email and password."""
         if not email:
             raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
+        # Email stored as-is (case-preserving) per RFC 5321 section 2.4
+        # normalize_email removed to preserve original casing
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
