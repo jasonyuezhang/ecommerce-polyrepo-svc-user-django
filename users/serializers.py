@@ -11,10 +11,12 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for User model."""
 
+    display_name = serializers.CharField(source='username', read_only=True)
+
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'username', 'first_name', 'last_name',
+            'id', 'email', 'display_name', 'first_name', 'last_name',
             'phone_number', 'is_active', 'is_verified', 'date_joined', 'updated_at'
         ]
         read_only_fields = ['id', 'is_active', 'is_verified', 'date_joined', 'updated_at']
