@@ -19,6 +19,15 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'is_active', 'is_verified', 'date_joined', 'updated_at']
 
+    def to_representation(self, instance):
+        """Serialize datetime fields as unix timestamps for compact payloads."""
+        data = super().to_representation(instance)
+        if instance.date_joined:
+            data['date_joined'] = int(instance.date_joined.timestamp())
+        if instance.updated_at:
+            data['updated_at'] = int(instance.updated_at.timestamp())
+        return data
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Serializer for user registration."""
