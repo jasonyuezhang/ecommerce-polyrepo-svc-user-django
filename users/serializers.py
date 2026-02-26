@@ -51,10 +51,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_email(self, value):
-        """Validate email is unique."""
-        if User.objects.filter(email=value.lower()).exists():
+        """Validate email is unique (case-preserving).
+
+        Email addresses are case-sensitive per RFC 5321 section 2.4.
+        We preserve the original casing as entered by the user.
+        Uniqueness check uses exact match for spec compliance.
+        """
+        if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('A user with this email already exists.')
-        return value.lower()
+        return value
 
     def create(self, validated_data):
         """Create and return a new user."""
@@ -71,7 +76,7 @@ class UserLoginSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """Validate user credentials."""
-        email = attrs.get('email', '').lower()
+        email = attrs.get('email', '')  # Case-sensitive per RFC 5321
         password = attrs.get('password', '')
 
         user = authenticate(username=email, password=password)
