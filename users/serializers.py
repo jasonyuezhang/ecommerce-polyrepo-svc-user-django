@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'email', 'username', 'first_name', 'last_name',
-            'phone_number', 'is_active', 'is_verified', 'date_joined', 'updated_at'
+            'phone', 'is_active', 'is_verified', 'date_joined', 'updated_at'
         ]
         read_only_fields = ['id', 'is_active', 'is_verified', 'date_joined', 'updated_at']
 
@@ -39,7 +39,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'email', 'password', 'password_confirm',
-            'username', 'first_name', 'last_name', 'phone_number'
+            'username', 'first_name', 'last_name', 'phone'
         ]
 
     def validate(self, attrs):
@@ -145,7 +145,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'phone_number']
+        fields = ['username', 'first_name', 'last_name', 'phone']
 
     def validate_username(self, value):
         """Validate username is unique if provided."""

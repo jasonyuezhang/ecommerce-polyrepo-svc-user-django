@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
-    phone_number = models.CharField(max_length=20, blank=True)
+    phone = models.JSONField(default=dict, blank=True, help_text="Structured phone: {country_code, national_number, e164}")
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -82,7 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'username': self.username,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'phone_number': self.phone_number,
+            'phone': self.phone,
             'is_active': self.is_active,
             'is_verified': self.is_verified,
             'date_joined': self.date_joined.isoformat() if self.date_joined else None,
