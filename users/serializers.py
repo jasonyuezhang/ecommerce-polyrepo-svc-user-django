@@ -1,6 +1,8 @@
 """
 Serializers for the user service.
 """
+import time
+from datetime import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
@@ -10,6 +12,21 @@ from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for User model."""
+
+    date_joined = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
+
+    def get_date_joined(self, obj):
+        """Return date_joined as Unix timestamp for efficient client-side parsing."""
+        if obj.date_joined:
+            return int(obj.date_joined.replace(tzinfo=timezone.utc).timestamp())
+        return None
+
+    def get_updated_at(self, obj):
+        """Return updated_at as Unix timestamp for efficient client-side parsing."""
+        if obj.updated_at:
+            return int(obj.updated_at.replace(tzinfo=timezone.utc).timestamp())
+        return None
 
     class Meta:
         model = User

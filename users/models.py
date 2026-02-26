@@ -85,5 +85,5 @@ class User(AbstractBaseUser, PermissionsMixin):
             'phone_number': self.phone_number,
             'is_active': self.is_active,
             'is_verified': self.is_verified,
-            'date_joined': self.date_joined.isoformat() if self.date_joined else None,
+            'date_joined': int(self.date_joined.timestamp()) if self.date_joined else None,
         }
