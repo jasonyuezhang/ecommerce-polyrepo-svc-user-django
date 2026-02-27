@@ -8,16 +8,28 @@ from django.contrib.auth.password_validation import validate_password
 from .models import User
 
 
+class PhoneSerializer(serializers.Serializer):
+    """Structured phone number."""
+    country_code = serializers.CharField(default='+1')
+    national_number = serializers.CharField()
+    e164 = serializers.CharField(read_only=True)
+
+
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer for User model."""
+    """Serializer for User model - V2 with structured fields."""
+    phone = PhoneSerializer(source='*', read_only=True)
+    display_name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'username', 'first_name', 'last_name',
-            'phone_number', 'is_active', 'is_verified', 'date_joined', 'updated_at'
+            'id', 'email', 'display_name', 'first_name', 'last_name',
+            'phone', 'is_active', 'is_verified', 'date_joined', 'updated_at'
         ]
         read_only_fields = ['id', 'is_active', 'is_verified', 'date_joined', 'updated_at']
+
+    def get_display_name(self, obj):
+        return obj.get_full_name()
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
