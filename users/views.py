@@ -36,6 +36,10 @@ class RegisterView(generics.CreateAPIView):
 
         # Generate tokens
         refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+        access_token['uid'] = str(user.id)
+        if 'user_id' in access_token:
+            del access_token['user_id']
 
         logger.info(f'User registered: {user.email}')
 
@@ -43,7 +47,7 @@ class RegisterView(generics.CreateAPIView):
             'message': 'User registered successfully.',
             'user': UserSerializer(user).data,
             'tokens': {
-                'access': str(refresh.access_token),
+                'access': str(access_token),
                 'refresh': str(refresh),
             }
         }, status=status.HTTP_201_CREATED)
@@ -61,6 +65,10 @@ class LoginView(APIView):
 
         user = serializer.validated_data['user']
         refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+        access_token['uid'] = str(user.id)
+        if 'user_id' in access_token:
+            del access_token['user_id']
 
         logger.info(f'User logged in: {user.email}')
 
@@ -68,7 +76,7 @@ class LoginView(APIView):
             'message': 'Login successful.',
             'user': UserSerializer(user).data,
             'tokens': {
-                'access': str(refresh.access_token),
+                'access': str(access_token),
                 'refresh': str(refresh),
             }
         }, status=status.HTTP_200_OK)
