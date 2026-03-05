@@ -148,7 +148,7 @@ class UserServiceServicer:
         """Validate a JWT access token."""
         try:
             token = AccessToken(request.token)
-            user_id = token.get('user_id')
+            user_id = token.get('uid')
 
             try:
                 user = User.objects.get(id=user_id)
