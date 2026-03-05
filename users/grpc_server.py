@@ -163,7 +163,7 @@ class UserServiceServicer:
                 return {
                     'valid': True,
                     'message': 'Token is valid.',
-                    'user_id': str(user.id),
+                    'uid': str(user.id),
                     'email': user.email
                 }
             except User.DoesNotExist:
