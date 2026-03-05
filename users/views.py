@@ -69,7 +69,7 @@ class LoginView(APIView):
             'user': UserSerializer(user).data,
             'tokens': {
                 'access': str(refresh.access_token),
-                'refresh': str(refresh),
+                
             }
         }, status=status.HTTP_200_OK)
 
