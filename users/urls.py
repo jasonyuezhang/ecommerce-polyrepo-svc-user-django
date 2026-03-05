@@ -17,7 +17,7 @@ urlpatterns = [
 
     # Current user
     path('users/me/', views.CurrentUserView.as_view(), name='current_user'),
-    path('users/me/password/', views.ChangePasswordView.as_view(), name='change_password'),
+    path('users/me/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
 
     # Admin endpoints
     path('users/', views.UserListView.as_view(), name='user_list'),
