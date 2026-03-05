@@ -66,7 +66,7 @@ class LoginView(APIView):
 
         return Response({
             'message': 'Login successful.',
-            'user': UserSerializer(user).data,
+            'profile': UserSerializer(user).data,
             'tokens': {
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
