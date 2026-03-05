@@ -16,7 +16,7 @@ urlpatterns = [
     path('auth/logout/', views.LogoutView.as_view(), name='logout'),
 
     # Current user
-    path('users/me/', views.CurrentUserView.as_view(), name='current_user'),
+    path('auth/me/', views.CurrentUserView.as_view(), name='current_user'),
     path('users/me/password/', views.ChangePasswordView.as_view(), name='change_password'),
 
     # Admin endpoints
