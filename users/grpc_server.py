@@ -148,7 +148,15 @@ class UserServiceServicer:
         """Validate a JWT access token."""
         try:
             token = AccessToken(request.token)
-            user_id = token.get('user_id')
+            user_id = token.get('uid') or token.get('user_id')
+
+            if not user_id:
+                return {
+                    'valid': False,
+                    'message': 'Token missing user identifier claim.',
+                    'user_id': '',
+                    'email': ''
+                }
 
             try:
                 user = User.objects.get(id=user_id)
